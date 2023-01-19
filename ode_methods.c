@@ -4,7 +4,7 @@
 
 //dy/dx = f(x, y)
 double f(double x, double y){
-    return 2*x;
+    return y*pow(x,3) - 1.5*y;
 }
 
 //methods
@@ -26,6 +26,17 @@ void midpoint(double *x, double *y, double dx){
     *x += dx;
 }
 
+void rungeKutta4(double *x, double *y, double dx){
+    double k1, k2, k3, k4;
+    k1 = f(*x, *y);
+    k2 = f(*x + dx/2, *y + k1 * (dx/2));
+    k3 = f(*x + dx/2, *y + k2 * (dx/2));
+    k4 = f(*x + dx, *y + k3 * dx);
+    
+    *y += ((k1 + 2*k2 + 2*k3 + k4)*dx)/6;
+    *x += dx;
+}
+
 //integrator
 void integrator(double yi, double xi, double xf, double dx, void (*updater_func)(double *x, double *y, double dx), FILE* fp){
     double x,y;
@@ -42,7 +53,7 @@ void integrator(double yi, double xi, double xf, double dx, void (*updater_func)
 
 void main(){
     double yi, xi, xf, dx;
-    yi = 0;
+    yi = 1;
     xi = 0;
     xf = 2;
     dx = 0.1;
@@ -55,4 +66,7 @@ void main(){
 
     FILE* fp_midpoint = fopen("midpoint_solution.txt", "w");
     integrator(yi, xi, xf, dx, &midpoint, fp_midpoint);
+
+    FILE* fp_rk4 = fopen("rungeKutta4_solution.txt", "w");
+    integrator(yi, xi, xf, dx, &rungeKutta4, fp_rk4);
 }
