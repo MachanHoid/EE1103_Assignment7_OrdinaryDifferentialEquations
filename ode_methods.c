@@ -13,13 +13,20 @@ void euler(double *x, double *y, double dx){
     *x += dx;
 }
 
+void heun(double *x, double *y, double dx){
+    double ye = *y + f(*x, *y)*dx;
+    double slope = (f(*x, *y) + f(*x + dx, ye))/2;
+    *y += slope*dx;
+    *x += dx;
+}
+
 //integrator
 void integrator(double yi, double xi, double xf, double dx, void (*updater_func)(double *x, double *y, double dx), FILE* fp){
     double x,y;
     x = xi;
     y = yi;
     fprintf(fp, "%lf    %lf\n", x, y);
-    while(x<=xf){
+    while(x<xf){
         updater_func(&x, &y, dx);
         fprintf(fp, "%lf    %lf\n", x, y);
     }
@@ -28,12 +35,15 @@ void integrator(double yi, double xi, double xf, double dx, void (*updater_func)
 
 
 void main(){
-    FILE* fpointer = fopen("euler_solution.txt", "w");
     double yi, xi, xf, dx;
     yi = 0;
     xi = 0;
     xf = 2;
-    dx = 0.01;
+    dx = 0.11;
 
-    integrator(yi, xi, xf, dx, &euler, fpointer);
+    FILE* fp_euler = fopen("euler_solution.txt", "w");
+    integrator(yi, xi, xf, dx, &euler, fp_euler);
+
+    FILE* fp_heun = fopen("heun_solution.txt", "w");
+    integrator(yi, xi, xf, dx, &heun, fp_heun);
 }
