@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-//dy/dx = f(x, y)
-double f(double x, double y){
-    return y*pow(x,3) - 1.5*y;
-}
-
 //methods
 void euler(double *x, double *y, double dx, double (*deriv_func)(double x, double y)){
     *y += deriv_func(*x,*y)*dx;
@@ -48,25 +43,3 @@ void integrator(double yi, double xi, double xf, double dx, void (*updater_func)
         fprintf(fp, "%lf    %lf\n", x, y);
     }
 }
-
-
-
-// void main(){
-//     double yi, xi, xf, dx;
-//     yi = 1;
-//     xi = 0;
-//     xf = 2;
-//     dx = 0.1;
-
-//     FILE* fp_euler = fopen("euler_solution.txt", "w");
-//     integrator(yi, xi, xf, dx, &euler, &f, fp_euler);
-
-//     FILE* fp_heun = fopen("heun_solution.txt", "w");
-//     integrator(yi, xi, xf, dx, &heun, &f, fp_heun);
-
-//     FILE* fp_midpoint = fopen("midpoint_solution.txt", "w");
-//     integrator(yi, xi, xf, dx, &midpoint, &f, fp_midpoint);
-
-//     FILE* fp_rk4 = fopen("rungeKutta4_solution.txt", "w");
-//     integrator(yi, xi, xf, dx, &rungeKutta4, &f, fp_rk4);
-// }
